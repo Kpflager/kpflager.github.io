@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+   <head>
+    <title>Lab 8 | D3</title>
+    <script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
+    <script src="https://kpflager.github.io/Lab08/bikes.js"></script>
+    <script src="https://kpflager.github.io/Lab08/parks.js"></script>
+    <style>
+body {
+    position: absolute;
+    font-family: "Proxima Nova", "Montserrat", sans-serif;
+}
+h1, h2 {
+    position: absolute;
+background: white;
+    left: 10px;
+    font-size: 1.3em;
+    font-weight: 100;
+}
+h2 {
+    top: 30px;
+    font-size: 1em;
+}
+.hover {
+    fill: yellow;
+}
+</style>
+   </head>
+    <body>
+      <h1>Parks of Lincoln NE connected with Bike Paths</h1>
+    <h2></h2>
+<script>
+//we will be putting our D3 code here within body script tag
+
+  var width = 1000;
+  var height = 600;
+  var svg = d3.select( "body" )
+  .append( "svg" )
+  .attr( "width", width )
+  .attr( "height", height );
+var g = svg.append( "g" );
+var lowColor = '#edf8e9'
+var highColor = '#006d2c'
+
+var minVal = 1
+var maxVal = 1700
+var ramp = d3.scaleLinear().domain([minVal,maxVal]).range([lowColor,highColor]);
+
+
+var albersProjection = d3.geoAlbers()
+    .scale( 150000 )
+    .rotate( [96.6992,0] )
+    .center( [0, 40.8244] )
+    .translate( [width/2,height/2] );
+
+var geoPath = d3.geoPath()
+    .projection( albersProjection );
+
+g.selectAll( "path" )
+    .data( bikes.features )
+    .enter()
+    .append( "path" )
+    .attr( "fill", "#ccc" )
+    .attr( "stroke", "#1c9099")
+    .attr( "d", geoPath )
+    .attr("class","ShapeSTLength")
+    .on("mouseover", function(d){
+d3.select("h2").text("Length Of Bike Path: " + d.properties.ShapeSTLength);
+d3.select(this).attr("class","ShapeSTLengt hover");
+})
+    .on("mouseout", function(d){
+    d3.select("h2").text("");
+    d3.select(this).attr("class","ShapeSTLength");
+})
+    var parks = svg.append( "g" );
+parks.selectAll( "path" )
+.data( Parks.features )
+.enter()
+.append( "path" )
+.attr ( "fill", function(d) { return ramp(d.properties.Acres) })
+.attr( "stroke", "#999" )
+.attr( "d", geoPath )
+.attr("Acres","Type")
+.on("mouseover", function(d){
+//populate h2 with "built in" & the year built field from the json
+d3.select("h2").text("Class of Park: " + d.properties.Type);
+d3.select(this).attr("Type","Acres hover");
+})
+//here, D3 to replace text interactively based on building data
+.on("mouseout", function(d){
+d3.select("h2").text("");
+d3.select(this).attr("Type","Acres");
+});
+</script>
+   </body>
+</html>
