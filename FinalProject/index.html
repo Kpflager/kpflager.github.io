@@ -1,8 +1,7 @@
-
 <!DOCTYPE html>
 <html>
    <head>
-    <title>Lab 8 | D3</title>
+    <title>FinalProject | D3</title>
     <script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
     <script src="https://kpflager.github.io/FinalProject/counties.js"></script>
     <script src="https://kpflager.github.io/FinalProject/landsales.js"></script>
@@ -28,7 +27,7 @@ h2 {
 </style>
    </head>
     <body>
-      <h1>Land Sales in Lancaster Count 1880</h1>
+      <h1>Land Sales in Lancaster County 1880</h1>
     <h2></h2>
 <script>
 //we will be putting our D3 code here within body script tags
@@ -40,16 +39,16 @@ h2 {
   .attr( "width", width )
   .attr( "height", height );
 var g = svg.append( "g" );
-var lowColor = '#bc2a66'
-var highColor = '#f9f9f9'
+var lowColor = '#fef0d9'
+var highColor = '#b30000'
 
 var minVal = 1
-var maxVal = 1600
+var maxVal = 650
 var ramp = d3.scaleLinear().domain([minVal,maxVal]).range([lowColor,highColor]);
 
 
 var albersProjection = d3.geoAlbers()
-    .scale( 40000 )
+    .scale( 47000 )
     .rotate( [96.6327,0] )
     .center( [0, 40.8497493] )
     .translate( [width/2,height/2] );
@@ -66,18 +65,18 @@ g.selectAll( "path" )
     .attr( "stroke", "#333")
     .attr( "d", geoPath );
 
-    var landsales = svg.append( "g" );
-landsales.selectAll( "path" )
+    var landsale = svg.append( "g" );
+landsale.selectAll( "path" )
 .data( landsales.features )
 .enter()
 .append( "path" )
-.attr ( "fill", function(d) { return ramp(d.properties.Id) })
+.attr ( "fill", function(d) { return ramp(d.properties.NO_ACRES) })
 .attr( "stroke", "#999" )
 .attr( "d", geoPath )
 .attr("Id","Id")
 .on("mouseover", function(d){
 //populate h2 with "built in" & the year built field from the json
-d3.select("h2").text("Total Acres " + d.properties.Id);
+d3.select("h2").text("Total Acres " + d.properties.NO_ACRES);
 d3.select(this).attr("properties","properties hover");
 })
 //here, D3 to replace text interactively based on building data
