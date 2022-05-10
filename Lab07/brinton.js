@@ -1,4 +1,4 @@
-var Brighton =
+var brighton =
 {
 "type": "FeatureCollection",
 "name": "briton",
